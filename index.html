@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imagenes IA</title>
+    <!-- Enlace a Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container h-100">
+        <div class="row h-100 justify-content-center align-items-center">
+            <div class="col-lg-6">
+                <h1 class="text-center">imagenes</h1>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="texto" placeholder="Introduce el texto">
+                </div>
+                <button type="button" class="btn btn-primary" id="enviar-texto">Enviar</button>
+                <div class="card mt-4" style="background-color: #f8f9fa;">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Resultado</h5>
+                        <div id="resultado" class="text-center"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enlace a jQuery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <!-- Enlace a Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $("#enviar-texto").click(function() {
+
+                var url = "https://api.openai.com/v1/images/generations";
+                var api_key = "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";
+                var texto = $("#texto").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "https://api.openai.com/v1/images/generations",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer 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"
+                    },
+                    data: JSON.stringify({
+                        "prompt": texto,
+                        "n": 1,
+                        "size": "256x256"
+                    }),
+                    success: function(respuesta) {
+                        var imgUrl = respuesta.data[0].url;
+                        var img = $("<img>").attr("src", imgUrl).addClass("card-img-top");
+                        $("#resultado").html(img);
+                        console.log('nose');
+                    },
+
+                    dataType: "json"
+                }).fail(function() {
+                    $("#resultado").html("Ha ocurrido un error al enviar la solicitud a la API.");
+                });
+
+            });
+        });
+    </script>
+</body>
+
+</html>
